@@ -46,3 +46,51 @@ cda <- inner_join(clients, da, by = join_by(client_id), suffix = c("_home", "_ba
 #dans cda on a deux nouvelles colonnes qui se créent : district_id.x et district_id.y, chacune des colonnes correspond à un district tiré d'une table différente. home va être pris dans clients et bank pour da. 
 
 ```
+
+### Home district versus bank district : 
+
+```{r}
+home_diff_bank <- cda |> filter(district_id_home != district_id_bank) |> nrow()
+```
+
+We observe that `r home_diff_bank` clients have a bank in a different district than where they live.
+
+```{r}
+cda |> 
+  group_by(account_id) |>
+  distinct(district_id_home) |> #garde que ceux qui ont les mêmes account et pas mm district
+  summarise(N =n()) |> 
+  filter(N>1)
+  
+```
+
+All the people who have the same account live in the same district.
+
+### Gender gap : 
+
+```{r}
+clients |> 
+  ggplot(aes(x=gender)) + geom_bar() + coord_flip() 
+
+
+```
+
+```{r}
+cda |> 
+  count(gender, type) |>
+  group_by(gender) |>
+  mutate(freq=n/sum(n)) |>
+  select(-n) |>
+  pivot_wider(values_from = freq, names_from = type)
+```
+
+```{r}
+cda |>
+  ggplot(aes(y=gender, fill = type)) + geom_bar(position = "fill")
+```
+
+```{r}
+chisq.test(cda |> pull(gender), 
+           cda |> pull(type))
+#H0 not rejected, no dependecy on the gender to type (owner or disponent)
+```
