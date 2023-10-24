@@ -1,0 +1,28 @@
+---
+title: "financial data analysis"
+author: "iris mancini"
+format: html
+editor: visual
+---
+
+```{r, message = FALSE}
+
+here::i_am("dplyr-102.Rproj")
+library(here)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(vroom)
+
+```
+
+## Data loading 
+
+```{r, message = FALSE}
+clients <- vroom(here("data", "client.csv")) 
+#it gives you the nb of columns and rows, if they are not correct the limiter is wrong
+accounts <- vroom(here("data", "account.csv"))
+disp <- vroom(here("data", "disp.csv"))
+```
+
+
