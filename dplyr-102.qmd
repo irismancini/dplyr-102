@@ -16,7 +16,7 @@ library(vroom)
 
 ```
 
-## Data loading 
+## Data loading
 
 ```{r, message = FALSE}
 clients <- vroom(here("data", "client.csv")) 
@@ -25,4 +25,24 @@ accounts <- vroom(here("data", "account.csv"))
 disp <- vroom(here("data", "disp.csv"))
 ```
 
+## Joining data tables 
 
+A collection of joining functions of the form "\*\_join".
+
+### Inner join : does by default what is called the natural join
+
+we want to join the clients with their accounts :
+
+```{r}
+#disposition and clients : 
+
+da <- inner_join(accounts, disp) #displays with what variable the join has been done, here it is account_id
+
+```
+
+```{r}
+cda <- inner_join(clients, da, by = join_by(client_id), suffix = c("_home", "_bank"))
+  
+#dans cda on a deux nouvelles colonnes qui se créent : district_id.x et district_id.y, chacune des colonnes correspond à un district tiré d'une table différente. home va être pris dans clients et bank pour da. 
+
+```
